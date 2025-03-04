@@ -23,3 +23,6 @@ A  terminal calculator written in Rust with real time calculating.
    ```
 
    Then run
+   ```
+   rmath
+   ```
