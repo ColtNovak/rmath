@@ -1,8 +1,12 @@
 [package]
-name = "tidal"
+name = "rmath" 
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
+
+[[bin]]
+name = "rmath"  
+path = "src/main.rs"
 
 [dependencies]
 color-eyre = "0.6"
