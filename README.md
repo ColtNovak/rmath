@@ -1,12 +1,13 @@
 # Rust  Calculator
 A  terminal calculator written in Rust with real time calculating.
-
+### NEW UPDATE!
+  - added advanced equations
 
 ## Features
 
 - Real-time mathematical evaluation
 - Support for basic operations (`+`, `-`, `*`, `/`)
--variables( pi, sqrt, ^, etc)
+- advanced equations (trig, etc)
 - Error handling
 - Clean interface
 
