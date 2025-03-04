@@ -4,24 +4,28 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use evalexpr::eval;
+use evalexpr::{
+    eval_with_context, ContextWithMutableFunctions, ContextWithMutableVariables, 
+    Function, HashMapContext, Value, DefaultNumericTypes
+};
 use ratatui::{
     prelude::*,
-    widgets::{Block, Borders, Gauge, LineGauge, List, ListItem, Paragraph, Widget},
-    Frame, Terminal, TerminalOptions, Viewport,
+    widgets::{Block, Borders, Paragraph},
+    Terminal,
 };
-use std::{io, time::Duration};
+use std::io;
+use std::time::Duration;
 
 struct App {
     input: String,
-    should_exit: bool,
+    exit: bool,
 }
 
 impl App {
     fn new() -> Self {
         Self {
             input: String::new(),
-            should_exit: false,
+            exit: false,
         }
     }
 
@@ -29,7 +33,7 @@ impl App {
         enable_raw_mode()?;
         execute!(io::stdout(), EnterAlternateScreen)?;
 
-        while !self.should_exit {
+        while !self.exit {
             terminal.draw(|f| self.ui(f))?;
             self.handle_events()?;
         }
@@ -42,59 +46,83 @@ impl App {
     fn handle_events(&mut self) -> Result<()> {
         if event::poll(Duration::from_millis(16))? {
             if let Event::Key(key) = event::read()? {
-                self.handle_key(key);
+                self.key_press(key);
             }
         }
         Ok(())
     }
 
-    fn handle_key(&mut self, key: KeyEvent) {
+    fn key_press(&mut self, key: KeyEvent) {
         if key.kind != KeyEventKind::Press {
             return;
         }
-        
+
         match key.code {
-            KeyCode::Esc => self.should_exit = true,
+            KeyCode::Esc => self.exit = true,
             KeyCode::Char(c) => self.input.push(c),
             KeyCode::Backspace => { self.input.pop(); },
-            KeyCode::Enter => self.process_input(),
+            KeyCode::Enter => self.clear_input(),
             _ => {}
         }
     }
 
-    fn process_input(&mut self) {
+    fn clear_input(&mut self) {
         self.input.clear();
     }
 
     fn ui(&self, f: &mut Frame) {
-        let main_layout = Layout::vertical([
+        let layout = Layout::vertical([
             Constraint::Length(3),
             Constraint::Min(1),
         ]);
 
-        let [input_area, status_area] = main_layout.areas(f.size());
+        let [input_area, status_area] = layout.areas(f.area());
 
         let display_input = self.input
-            .replace("^", "⁁")  
+            .replace("^", "⁁")
             .replace("sqrt(", "√(")
             .replace("pi", "π")
+            .replace("⁁2", "²")
             .replace("sin(", "sin(")
             .replace("cos(", "cos(")
             .replace("tan(", "tan(");
 
-        let input_block = Block::default()
+        let block = Block::default()
             .borders(Borders::ALL)
             .title("RustCalc")
             .border_style(Style::new().fg(Color::Yellow));
-        
-        let input_text = Paragraph::new(display_input.clone())
-            .block(input_block)
+
+        let input_text = Paragraph::new(display_input)
+            .block(block)
             .style(Style::new().fg(Color::White));
 
         let status_text = if self.input.trim().is_empty() {
             "Enter your math".to_string()
         } else {
-            match eval(&self.input) {
+            let mut context: HashMapContext<DefaultNumericTypes> = HashMapContext::new();
+            context.set_value("pi".into(), Value::Float(std::f64::consts::PI)).unwrap();
+            context.set_value("e".into(), Value::Float(std::f64::consts::E)).unwrap();
+
+            let mut add_func = |name: &str, func: fn(f64) -> f64| {
+                context.set_function(
+                    name.into(),
+                    Function::new(move |args| {
+                        let num = args.as_float()?;
+                        Ok(Value::Float(func(num)))
+                    }),
+                )
+            };
+
+            add_func("sin", f64::sin).unwrap();
+            add_func("cos", f64::cos).unwrap();
+            add_func("tan", f64::tan).unwrap();
+
+            context.set_function("sqrt".into(), Function::new(|args| {
+                let num: f64 = args.as_float()?;
+                Ok(Value::Float(num.sqrt()))
+            })).unwrap();
+
+            match eval_with_context(&self.input, &context) {
                 Ok(result) => format!("{} = {:.6}", self.input, result),
                 Err(e) => format!("Error: {}", e),
             }
@@ -111,11 +139,10 @@ impl App {
 
 fn main() -> Result<()> {
     color_eyre::install()?;
-    
+
     let backend = CrosstermBackend::new(io::stdout());
-    let mut terminal = ratatui::init_with_options(TerminalOptions {
-        viewport: Viewport::Inline(20),
-    });    
+    let terminal = Terminal::new(backend)?;
+
     enable_raw_mode()?;
     execute!(io::stdout(), EnterAlternateScreen)?;
 
