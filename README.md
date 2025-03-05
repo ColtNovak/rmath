@@ -12,26 +12,22 @@ A  terminal calculator written in Rust with real time calculating.
 - Clean interface
 
 ### Steps
-1. Clone the repository:
-```
+# 1. Clone the Repository
 git clone https://github.com/ColtNovak/RustCalc.git
 cd RustCalc
-```
-2. build the repo
-```
+
+# 2. Build the Project
 cargo build --release
-```
-3. check
-```
-ls target/release/
-```
-4. move the files
-```
-mv target/release/rmath ~/.local/bin
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc  # or ~/.zshrc
-```
-5. restart terminal
-6. run the project!
-```
+
+# 3. Move the binary
+sudo mv target/release/rmath /usr/bin/
+
+# 4. Verify the Move
+ls -l /usr/bin/rmath
+
+# 5. Check the `PATH`
+echo $PATH
+
+# 6. Run `rmath`
 rmath
-```
+
