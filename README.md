@@ -22,12 +22,10 @@ cargo build --release
 # 3. Move the binary
 sudo mv target/release/rmath /usr/bin/
 
-# 4. Verify the Move
-ls -l /usr/bin/rmath
 
-# 5. Check the `PATH`
+# 4. Check the `PATH`
 echo $PATH
 
-# 6. Run `rmath`
+# 5. Run `rmath`
 rmath
 
