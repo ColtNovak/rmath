@@ -14,7 +14,7 @@ A  terminal calculator written in Rust with real time calculating.
 ### Steps
 1. Clone the repository:
 ```
-git clone https://github.com/your-username/RustCalc.git
+git clone https://github.com/ColtNovak/RustCalc.git
 cd RustCalc
 ```
 2. build the repo
