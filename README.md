@@ -16,16 +16,16 @@ A  terminal calculator written in Rust with real time calculating.
 git clone https://github.com/ColtNovak/RustCalc.git
 cd RustCalc
 
-# 2. Build the Project
+### 2. Build the Project
 cargo build --release
 
-# 3. Move the binary
+### 3. Move the binary
 sudo mv target/release/rmath /usr/bin/
 
 
-# 4. Check the `PATH`
+### 4. Check the `PATH`
 echo $PATH
 
-# 5. Run `rmath`
+### 5. Run `rmath`
 rmath
 
