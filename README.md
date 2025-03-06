@@ -14,7 +14,7 @@ A  terminal calculator written in Rust with real time calculating.
 ## Automated installation (AUR) (Reccomended)
 simply search Rmath in your preferred aur helper,for example, ``` yay -S rmath```
 ## Manual installation (for contributing)
-# 1. Clone the Repository
+### 1. Clone the Repository
 ```
 git clone https://github.com/ColtNovak/rmath.git
 cd RustCalc
