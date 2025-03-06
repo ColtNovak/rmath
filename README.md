@@ -35,3 +35,9 @@ echo $PATH
 Then, restart your terminal
 thats it! now you can run the 'rmath' command to launch the script
 
+### Todo
+- Custom coloring for different symbols
+- solving for X
+- fractions
+- auto parenthesis closing
+- more functions
