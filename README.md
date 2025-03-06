@@ -5,27 +5,33 @@ A  terminal calculator written in Rust with real time calculating.
 
 ## Features
 
-- Real-time mathematical evaluation
+- Real-time math equation solving
 - Support for basic operations (`+`, `-`, `*`, `/`)
 - advanced equations (trig, etc)
+- functions
 - Error handling
 - Clean interface
-
-### Steps
+## Automated installation (AUR) (Reccomended)
+simply search Rmath in your preferred aur helper,for example, ``` yay -S rmath```
+## Manual installation (for contributing)
 # 1. Clone the Repository
-git clone https://github.com/ColtNovak/RustCalc.git
+```
+git clone https://github.com/ColtNovak/rmath.git
 cd RustCalc
-
+```
 ### 2. Build the Project
+```
 cargo build --release
-
+```
 ### 3. Move the binary
+```
 sudo mv target/release/rmath /usr/bin/
-
+```
 
 ### 4. Check the `PATH`
+```
 echo $PATH
-
-### 5. Run `rmath`
-rmath
+```
+Then, restart your terminal
+thats it! now you can run the 'rmath' command to launch the script
 
