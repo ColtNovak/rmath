@@ -38,7 +38,9 @@ thats it! now you can run the 'rmath' command to launch the script
 ## Usage
 type anything into it, example:
 ```sqrt(4.0) * pi + cos(4.0)```
+and just watch as it sovles your equation instantly and in real time.
 
+## Previews
 ### Todo
 - Custom coloring for different symbols
 - solving for X
