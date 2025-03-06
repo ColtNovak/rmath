@@ -41,3 +41,4 @@ thats it! now you can run the 'rmath' command to launch the script
 - fractions
 - auto parenthesis closing
 - more functions
+- I lowk have NO idea how to update my aur package lol help me
