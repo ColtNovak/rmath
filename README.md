@@ -1,5 +1,5 @@
 # Rust  Calculator
-A  terminal calculator written in Rust with real time calculating.
+A  terminal calculator written in Rust with real-time calculating.
 ### NEW UPDATE!
   - added advanced equations
 
@@ -11,8 +11,8 @@ A  terminal calculator written in Rust with real time calculating.
 - functions
 - Error handling
 - Clean interface
-## Automated installation (AUR) (Reccomended)
-simply search Rmath in your preferred aur helper,for example, ``` yay -S rmath```
+## Automated installation (AUR) (recommended)
+simply search Rmath in your preferred aur helper, for example, ``` yay -S rmath```
 ## Manual installation (for contributing)
 ### 1. Clone the Repository
 ```
@@ -32,13 +32,12 @@ sudo mv target/release/rmath /usr/bin/
 ```
 echo $PATH
 ```
-Then, restart your terminal
-thats it! now you can run the 'rmath' command to launch the script
+Then, restart your terminal, and that's it! Now you can run the 'rmath' command to launch the script.
 
 ## Usage
-type anything into it, example:
+type anything into it, for example:
 ```sqrt(4.0) * pi + cos(4.0)```
-and just watch as it sovles your equation instantly and in real time.
+and just watch as it solves your equation instantly and in real-time.
 
 ## Previews
 ### Todo
