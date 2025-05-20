@@ -44,4 +44,4 @@ WORKDIR /data
 
 EXPOSE 8080
 
-CMD ["ttyd", "-t", "rendererType=canvas", "-p", "8080", "stdbuf", "-i0", "-o0", "-e0", "rmath"]
+CMD ["ttyd", "-t", "rendererType=canvas","-w" "-p", "8080", "stdbuf", "-i0", "-o0", "-e0", "rmath"]
