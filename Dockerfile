@@ -28,7 +28,7 @@ RUN pacman -S --noconfirm \
     openssl \
     json-c \
     libwebsockets \
-    bash \       # Ensure bash is installed
+    bash \      
     && git clone https://github.com/tsl0922/ttyd.git \
     && cd ttyd \
     && mkdir build \
