@@ -43,4 +43,4 @@ RUN pacman -Scc --noconfirm && \
 WORKDIR /data
 EXPOSE 8080
 
-CMD ["ttyd", "-t", "rendererType=canvas", "-p", "8080", "bash", "-ic", "rmath"]
+CMD ["ttyd", "-w", "-t", "disableLeaveAlert=true", "-p", "8080", "bash", "-ic", "rmath"]
