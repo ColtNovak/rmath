@@ -5,8 +5,7 @@ RUN pacman -Syu --noconfirm && \
     base-devel \
     git \
     sudo \
-    ncurses \  
-    tmux
+    ncurses
 
 RUN useradd -m builder && \
     echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
@@ -16,9 +15,11 @@ WORKDIR /home/builder
 
 RUN git clone https://aur.archlinux.org/yay.git && \
     cd yay && \
-    makepkg -si --noconfirm
+    makepkg -si --noconfirm --skippgpcheck
 
-RUN yay -S --noconfirm rmath
+RUN yay -S --noconfirm rmath && \
+    echo "rmath path: $(which rmath)" && \
+    sudo cp -v $(which rmath) /usr/local/bin/
 
 USER root
 
@@ -27,21 +28,19 @@ RUN pacman -S --noconfirm \
     pkg-config \
     openssl \
     json-c \
-    libwebsockets \
-    bash \      
-    && git clone https://github.com/tsl0922/ttyd.git \
-    && cd ttyd \
-    && mkdir build \
-    && cd build \
-    && cmake -DCMAKE_BUILD_TYPE=Release .. \
-    && make \
-    && make install
+    libwebsockets && \
+    git clone https://github.com/tsl0922/ttyd.git && \
+    cd ttyd && \
+    mkdir build && \
+    cd build && \
+    cmake -DCMAKE_BUILD_TYPE=Release .. && \
+    make && \
+    make install
 
 RUN pacman -Scc --noconfirm && \
     rm -rf /home/builder/yay /var/cache/pacman/pkg/*
 
 WORKDIR /data
-
 EXPOSE 8080
 
-CMD ["ttyd","-w", "-p", "8080", "bash", "rmath"]
+CMD ["ttyd", "-t", "rendererType=canvas", "-p", "8080", "bash", "-ic", "rmath"]
