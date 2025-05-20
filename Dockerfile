@@ -1,37 +1,34 @@
-FROM rust:latest as builder
+FROM archlinux:latest
 
-RUN apt-get update && apt-get install -y \
-    cmake \
-    pkg-config \
-    libssl-dev \
-    libwebsockets-dev \
-    libjson-c-dev \
-    && rm -rf /var/lib/apt/lists/*
+RUN pacman -Syu --noconfirm && \
+    pacman -S --noconfirm \
+    base-devel \
+    git \
+    sudo
 
-RUN git clone https://github.com/tsl0922/ttyd.git \
-    && cd ttyd \
-    && mkdir build \
-    && cd build \
-    && cmake -DCMAKE_BUILD_TYPE=Release -Dstatic=ON .. \
-    && make \
-    && make install
+RUN useradd -m builder && \
+    echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
 
-WORKDIR /app
-COPY Cargo.toml .
-COPY src src/
+USER builder
+WORKDIR /home/builder
+RUN git clone https://aur.archlinux.org/yay.git && \
+    cd yay && \
+    makepkg -si --noconfirm
 
-RUN cargo build --release
+RUN yay -S --noconfirm rmath
 
-FROM debian:bookworm-slim
+USER root
+RUN pacman -S --noconfirm cmake pkg-config openssl json-c && \
+    git clone https://github.com/tsl0922/ttyd.git && \
+    cd ttyd && \
+    mkdir build && \
+    cd build && \
+    cmake -DCMAKE_BUILD_TYPE=Release .. && \
+    make && \
+    make install
 
-RUN apt-get update && apt-get install -y \
-    libssl3 \
-    libjson-c5 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY --from=builder /app/target/release/rmath /usr/local/bin/
-COPY --from=builder /usr/local/bin/ttyd /usr/local/bin/
+RUN pacman -Scc --noconfirm && \
+    rm -rf /home/builder/yay /var/cache/pacman/pkg/*
 
 WORKDIR /data
 
