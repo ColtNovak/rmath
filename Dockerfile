@@ -18,7 +18,7 @@ RUN git clone https://aur.archlinux.org/yay.git && \
 RUN yay -S --noconfirm rmath
 
 USER root
-RUN pacman -S --noconfirm cmake pkg-config openssl json-c && \
+RUN pacman -S --noconfirm cmake pkg-config openssl json-c libwebsockets && \
     git clone https://github.com/tsl0922/ttyd.git && \
     cd ttyd && \
     mkdir build && \
