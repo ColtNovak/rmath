@@ -48,4 +48,4 @@ WORKDIR /data
 
 EXPOSE 8080
 
- CMD ["ttyd", "-t", "rendererType=dom", "-p", "8080", "tmux", "new-session", "rmath"]
+ CMD ["ttyd", "-t", "terminal=linux", "-p", "8080", "sh", "-c", "stty raw -echo && rmath"]
