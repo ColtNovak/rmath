@@ -1,28 +1,48 @@
 FROM archlinux:latest
 
 RUN pacman -Syu --noconfirm && \
-    pacman -S --noconfirm base-devel git sudo ncurses bash util-linux && \
-    rm -rf /var/cache/pacman/pkg/*
-
-RUN curl -L https://github.com/tsl0922/ttyd/releases/download/1.7.3/ttyd.x86_64 -o /usr/bin/ttyd && \
-    chmod +x /usr/bin/ttyd
+    pacman -S --noconfirm \
+    base-devel \
+    git \
+    sudo \
+    ncurses \
+    tmux \
+    expect
 
 RUN useradd -m builder && \
     echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
 
 USER builder
-RUN git clone https://aur.archlinux.org/yay.git /tmp/yay && \
-    cd /tmp/yay && \
-    makepkg -si --noconfirm --skippgpcheck && \
-    rm -rf /tmp/yay
+WORKDIR /home/builder
 
-RUN yay -S --noconfirm rmath --overwrite='*' --nocheck && \
-    sudo cp -v $(which rmath) /usr/local/bin/
+RUN git clone https://aur.archlinux.org/yay.git && \
+    cd yay && \
+    makepkg -si --noconfirm
+
+RUN yay -S --noconfirm rmath
 
 USER root
-RUN ln -s /usr/share/terminfo /etc/terminfo
+
+RUN pacman -S --noconfirm \
+    cmake \
+    pkg-config \
+    openssl \
+    json-c \
+    libwebsockets \
+    bash \
+    util-linux && \  # For stty and terminal tools
+    git clone https://github.com/tsl0922/ttyd.git && \
+    cd ttyd && \
+    mkdir build && \
+    cd build && \
+    cmake -DCMAKE_BUILD_TYPE=Release .. && \
+    make && \
+    make install
+
+RUN pacman -Scc --noconfirm && \
+    rm -rf /home/builder/yay /var/cache/pacman/pkg/*
 
 WORKDIR /data
 EXPOSE 8080
 
-CMD ["ttyd", "-w", "-t", "rendererType=canvas", "-p", "8080", "bash", "--login", "-ic", "TERM=xterm-256color; stty sane; rmath"]
+CMD ["ttyd", "-t", "-p", "8080", "bash", "-ic", "stty sane && TERM=xterm-256color rmath"]
